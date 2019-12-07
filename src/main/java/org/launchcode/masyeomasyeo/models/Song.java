@@ -1,5 +1,7 @@
 package org.launchcode.masyeomasyeo.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -8,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Entity
+@Entity // This tells Hibernate to make a table out of this class
 @Table(name = "songs")
 public class Song implements Serializable {
 
@@ -27,6 +29,7 @@ public class Song implements Serializable {
 /*    private List<Genre> genres;*/
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     @JoinTable(name = "songs_genres",
             joinColumns = {
                     @JoinColumn(name = "song_id", referencedColumnName = "id",
@@ -38,6 +41,7 @@ public class Song implements Serializable {
     private Set<Genre> genres = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     @JoinTable(name = "songs_artists",
             joinColumns = {
                     @JoinColumn(name = "song_id", referencedColumnName = "id",

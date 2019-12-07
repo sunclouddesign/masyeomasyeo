@@ -1,5 +1,7 @@
 package org.launchcode.masyeomasyeo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class Artist implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "artists", fetch = FetchType.LAZY)
+    @JsonBackReference
     /*private List<Song> songs = new ArrayList<>();*/
     private Set<Song> songs = new HashSet<>();
 
