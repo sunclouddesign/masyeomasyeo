@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+    <form method="post" style="max-width:600px;" th:object="${song}">
+
+        <div class="form-group">
+            <label th:for="name">Name</label>
+            <input th:field="*{name}" />
+            <div th:errors="*{name}"></div>
+        </div>
+        <div class="form-group">
+            <label th:for="tempo">Tempo</label>
+            <input th:field="*{tempo}" />
+            <div th:errors="*{tempo}"></div>
+        </div>
+        <div class="form-group">
+            <label th:for="mkey">Key</label>
+            <input th:field="*{mkey}" />
+            <div th:errors="*{mkey}"></div>
+        </div>
+<!--        <div class="form-group">
+            <label th:for="artist">Artist</label>
+            <select name="artist_id">
+                <option th:each="artist : ${artists}"
+                        th:value="${artist.id}"
+                        th:text="${artist.name}"></option>
+            </select>
+        </div>-->
+
+<!--        <input
+                type="checkbox"
+                name="myBooleanVariable"
+                th:checked="${myBooleanVariable}"/>
+
+        <div th:each="continent : ${continents}">
+            <input type="checkbox" th:field="*{continents}" th:value="${continent.webalizedName}" />
+            <label th:for="${#ids.prev('continents')}" th:text="${continent.name}">Europe</label>
+        </div>-->
+
+
+        <div class="form-group">
+            <label th:for="artist">Artists</label>
+            <div th:each="artist : ${artists}">
+            <input
+                    type="checkbox"
+                    name="artist_id"
+                    th:value="${artist.id}"
+                    th:text="${artist.name}"
+                    th:checked="${artist.id}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label th:for="genre">Genre</label>
+            <div th:each="genre : ${genres}">
+                <input
+                        type="checkbox"
+                        name="genre_id"
+                        th:value="${genre.id}"
+                        th:text="${genre.name}"
+                        th:checked="${genre.id}" />
+            </div>
+        </div>
+<!--        <div class="form-group">
+            <label th:for="genre">Genre</label>
+            <select name="genre_id">
+                <option th:each="genre : ${genres}"
+                        th:value="${genre.id}"
+                        th:text="${genre.name}"></option>
+            </select>
+        </div>-->
+        <input type="submit" value="Add Song" />
+    </form>
+</div>
+</body>
+</html>

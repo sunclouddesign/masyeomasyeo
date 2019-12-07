@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+    <p th:unless="${songs} and ${songs.size()}">no songs :(</p>
+
+
+    <table class="table">
+
+        <tr>
+            <th>Name</th>
+            <th>Tempo</th>
+            <th>Key</th>
+            <th>Genres</th>
+            <th>Artists</th>
+        </tr>
+
+        <tr th:each="song : ${songs}">
+            <td th:text="${song.name}"></td>
+            <td th:text="${song.tempo}"></td>
+            <td th:text="${song.mkey}"></td>
+            <td >
+                <!--<div th:each="genre : ${genres}" th:text="${genre.name}"></div>-->
+                <div th:each="genre : ${song.genres}" th:text="${genre.name}"></div>
+                <!--<div th:case="${T(the.package.and.Object)}"></div>-->
+            </td>
+            <td >
+                <div th:each="artist : ${song.artists}" th:text="${artist.name}"></div>
+            </td>
+        </tr>
+    </table>
+    <p><a th:href="@{'/song/add/'}">Add</a> | <a th:href="@{'/song/remove/'}">Remove</a></p>
+</div>
+</body>
+</html>

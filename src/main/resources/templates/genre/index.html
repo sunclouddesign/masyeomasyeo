@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+    <p th:unless="${genres} and ${genres.size()}">no genres :(</p>
+
+    <ul th:each="genre : ${genres}">
+        <li th:text="${genre.name}"></li>
+    </ul>
+    <p><a href="/genre/add">Add</a> | <a href="/genre/remove">Remove</a></p>
+
+    </div>
+</body>
+</html>

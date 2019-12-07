@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+    <p th:unless="${artists} and ${artists.size()}">no artists :(</p>
+
+    <ul th:each="artist : ${artists}">
+        <li th:text="${artist.name}"></li>
+    </ul>
+    <p><a href="/artist/add">Add</a> | <a href="/artist/remove">Remove</a></p>
+
+    </div>
+</body>
+</html>
