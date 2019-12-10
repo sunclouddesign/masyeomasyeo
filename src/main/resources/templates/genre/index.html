@@ -12,7 +12,7 @@
     <p th:unless="${genres} and ${genres.size()}">no genres :(</p>
 
     <ul th:each="genre : ${genres}">
-        <li th:text="${genre.name}"></li>
+        <li><a th:href="@{/genre/{gen}(gen=${genre.id})}" th:text="${genre.name}"></a></li>
     </ul>
     <p><a href="/genre/add">Add</a> | <a href="/genre/remove">Remove</a></p>
 

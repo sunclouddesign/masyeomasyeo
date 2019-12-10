@@ -2,16 +2,17 @@ package org.launchcode.masyeomasyeo.controllers;
 
 import org.launchcode.masyeomasyeo.models.Artist;
 import org.launchcode.masyeomasyeo.models.Genre;
+import org.launchcode.masyeomasyeo.models.Song;
 import org.launchcode.masyeomasyeo.models.data.ArtistDao;
+import org.launchcode.masyeomasyeo.services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("artist")
@@ -19,6 +20,9 @@ public class ArtistController {
 
     @Autowired
     private ArtistDao artistDao;
+
+    @Autowired
+    private SongService songService;
 
     // Request path: /artist
     @RequestMapping(value = "")
@@ -48,6 +52,24 @@ public class ArtistController {
 
         artistDao.save(newArtist);
         return "redirect:";
+    }
+
+    @RequestMapping(value = "{art}")
+    public String viewArtist(Model model,
+                            @PathVariable int art,
+                            @RequestParam(defaultValue = "0") Integer pageNo,
+                            @RequestParam(defaultValue = "10") Integer pageSize,
+                            @RequestParam(defaultValue = "id") String sortBy) {
+
+        Artist anArtist = artistDao.findById(art).orElse(null);
+        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy);
+        model.addAttribute("songs",list);
+        // TODO: Replace null with exception above
+        model.addAttribute("title","Songs with artist: " + anArtist.getName());
+        model.addAttribute("artist",anArtist);
+
+        return "artist/single";
+
     }
 
 }

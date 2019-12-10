@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+    <p th:unless="${artist}">Artist ID not found</p>
+
+
+    <table class="table">
+
+        <tr>
+            <th><a th:href="@{/artist/{art}?sortBy=name(art=${artist.id})}">Song Name</a></th>
+            <th><a th:href="@{/artist/{art}?sortBy=tempo(art=${artist.id})}">Tempo</a></th>
+            <th><a th:href="@{/artist/{art}?sortBy=mkey(art=${artist.id})}">Key</a></th>
+        </tr>
+
+        <tr th:each="song : ${artist.songs}">
+            <td th:text="${song.name}"></td>
+            <td th:text="${song.tempo}"></td>
+            <td th:text="${song.mkey}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

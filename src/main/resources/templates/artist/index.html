@@ -12,7 +12,7 @@
     <p th:unless="${artists} and ${artists.size()}">no artists :(</p>
 
     <ul th:each="artist : ${artists}">
-        <li th:text="${artist.name}"></li>
+        <li><a th:href="@{/artist/{art}(art=${artist.id})}" th:text="${artist.name}"></a></li>
     </ul>
     <p><a href="/artist/add">Add</a> | <a href="/artist/remove">Remove</a></p>
 

@@ -1,16 +1,21 @@
 package org.launchcode.masyeomasyeo.controllers;
 
+import org.launchcode.masyeomasyeo.exceptions.RecordNotFoundException;
 import org.launchcode.masyeomasyeo.models.Genre;
+import org.launchcode.masyeomasyeo.models.Song;
 import org.launchcode.masyeomasyeo.models.data.GenreDao;
+import org.launchcode.masyeomasyeo.models.data.SongDao;
+import org.launchcode.masyeomasyeo.services.GenreService;
+import org.launchcode.masyeomasyeo.services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("genre")
@@ -18,6 +23,12 @@ public class GenreController {
 
     @Autowired
     private GenreDao genreDao;
+
+/*    @Autowired
+    private GenreService genreService;*/
+
+    @Autowired
+    private SongService songService;
 
     // Request path: /genre
     @RequestMapping(value = "")
@@ -47,6 +58,24 @@ public class GenreController {
 
         genreDao.save(newGenre);
         return "redirect:";
+    }
+
+    @RequestMapping(value = "{gen}")
+    public String viewGenre(Model model,
+                            @PathVariable int gen,
+                            @RequestParam(defaultValue = "0") Integer pageNo,
+                            @RequestParam(defaultValue = "10") Integer pageSize,
+                            @RequestParam(defaultValue = "id") String sortBy) {
+
+        Genre aGenre = genreDao.findById(gen).orElse(null);
+        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy);
+        model.addAttribute("songs",list);
+        // TODO: Replace null with exception above
+        model.addAttribute("title","Songs in Genre: " + aGenre.getName());
+        model.addAttribute("genre",aGenre);
+
+        return "genre/single";
+
     }
 
 }
