@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8"/>
-    <title></title>
-</head>
+<head th:replace="fragments :: head"></head>
 <body>
+<!--TODO: Reconcile this template with list.html-->
+<div th:replace="fragments :: page-header"></div>
 
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+
+<div>
+<!--    <form method="POST" enctype="multipart/form-data" action="/">
+        <table>
+            <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+        </table>
+    </form>-->
+    <th:url value="/doUpload" var="doUploadURL" />
+    <form method="post" th:action="@{load}" enctype="multipart/form-data">
+    <!--<form method="post" modelAttribute="formUpload" action="doUpload" enctype="multipart/form-data">-->
+        <input path="files" type="file" name="file" multiple="multiple" />
+        <errors path="files" /><br />
+
+        <button type="submit">Upload</button>
+
+    </form>
+</div>
+
+<div>
+    <ul>
+        <li th:each="file : ${files}">
+            <a th:href="${file}" th:text="${file}" />
+        </li>
+    </ul>
+</div>
+</div>
 </body>
 </html>

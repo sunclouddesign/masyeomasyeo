@@ -6,9 +6,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+
+import javax.xml.bind.annotation.*;
+
+@XmlRootElement(name="song")
+@XmlAccessorType(XmlAccessType.FIELD)
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name = "songs")
@@ -25,8 +28,6 @@ public class Song implements Serializable {
     private Integer tempo;
 
     private String mkey;
-
-/*    private List<Genre> genres;*/
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonManagedReference
@@ -51,11 +52,6 @@ public class Song implements Serializable {
                             nullable = false, updatable = false)})
     private Set<Artist> artists = new HashSet<>();
 
-/*    @ManyToMany(mappedBy = "songs")
-    private List<Artist> artists;
-
-    @ManyToMany(mappedBy = "songs")
-    private List<Genre> genres;*/
 
     public Song() {}
 
@@ -109,19 +105,5 @@ public class Song implements Serializable {
         this.artists = artists;
     }
 
-    /*    public List<Genre> getGenres() {
-        return genres;
-    }
 
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
-    }
-
-    public List<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(List<Artist> artists) {
-        this.artists = artists;
-    }*/
 }
