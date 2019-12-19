@@ -24,19 +24,34 @@
                     <div th:case="*">
                         <table class="table table-striped table-responsive-md">
                             <thead>
+                            <!--<input type="hidden" th:value="${asc}" name="asc" />-->
                             <tr>
-                                <th><a href="/song/list?sortBy=name">Name</a></th>
-                                <th><a href="/song/list?sortBy=mkey">Key</a></th>
-                                <th><a href="/song/list?sortBy=tempo">Tempo</a></th>
+                                </th>
+                                <th th:switch="${asc}">
+                                    <a th:case="null" href="/song/list?sortBy=name">Name</a>
+                                    <a th:case=1 href="/song/list?sortBy=name&asc=0">Name</a>
+                                    <a th:case=0 href="/song/list?sortBy=name&asc=1">Name</a>
+                                </th>
+                                <th th:switch="${asc}">
+                                    <a th:case="null" href="/song/list?sortBy=mkey">Key</a>
+                                    <a th:case=1 href="/song/list?sortBy=mkey&asc=0">Key</a>
+                                    <a th:case=0 href="/song/list?sortBy=mkey&asc=1">Key</a>
+                                </th>
+                                <th th:switch="${asc}">
+                                    <a th:case="null" href="/song/list?sortBy=tempo">Tempo</a>
+                                    <a th:case=1 href="/song/list?sortBy=tempo&asc=0">Tempo</a>
+                                    <a th:case=0 href="/song/list?sortBy=tempo&asc=1">Tempo</a>
+                                </th>
                                 <th>Genres</th>
                                 <th>Artists</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
+                            </div>
                             </thead>
                             <tbody>
                             <tr th:each="song : ${songs}">
-                                <td th:text="${song.name}"></td>
+                                <td><a th:href="@{/song/{id}(id=${song.id})}" th:value="${song.id}" name="id" th:text="${song.name}"></a></td>
                                 <td th:text="${song.mkey}"></td>
                                 <td th:text="${song.tempo}"></td>
                                 <td >
@@ -48,7 +63,7 @@
                                 </td>
                                 <td>
                                     <!--TODO: Figure out why this is not passing id-->
-                                    <a th:href="@{/song/edit/{id}(id=${song.id})}" class="btn btn-primary">Edit</a>
+                                    <a th:href="@{/song/edit/{id}(id=${song.id})}" class="btn btn-primary" name="id" th:value="${song.id}">Edit</a>
                                 </td>
                                 <td>
                                     <a th:href="@{/song/delete/{id}(id=${song.id})}" th:value="${song.id}" name="id" class="btn btn-primary">

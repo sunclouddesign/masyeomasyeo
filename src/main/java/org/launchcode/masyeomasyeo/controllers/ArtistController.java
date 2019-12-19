@@ -59,14 +59,16 @@ public class ArtistController {
                             @PathVariable int art,
                             @RequestParam(defaultValue = "0") Integer pageNo,
                             @RequestParam(defaultValue = "10") Integer pageSize,
-                            @RequestParam(defaultValue = "id") String sortBy) {
+                            @RequestParam(defaultValue = "id") String sortBy,
+                             @RequestParam(defaultValue ="1") Integer asc) {
 
         Artist anArtist = artistDao.findById(art).orElse(null);
-        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy);
+        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy,asc);
         model.addAttribute("songs",list);
         // TODO: Replace null with exception above
         model.addAttribute("title","Songs with artist: " + anArtist.getName());
         model.addAttribute("artist",anArtist);
+        model.addAttribute("asc",asc);
 
         return "artist/single";
 

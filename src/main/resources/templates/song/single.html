@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head"></head>
+
+<body>
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+    <div class="container my-2">
+        <div class="card">
+            <div class="card-body">
+                <div th:switch="${songlist}" class="container my-5">
+                    <div class="col-md-10">
+                        <h2 th:case="null">No recommendations found !!</h2>
+                        <div th:case="*">
+                            <table class="table table-striped table-responsive-md">
+                                <thead>
+                                <tr>
+                                    </th>
+                                    <th th:switch="${asc}">
+                                        <a th:case="null" href="/song/list?sortBy=name">Name</a>
+                                        <a th:case=1 href="/song/list?sortBy=name&asc=0">Name</a>
+                                        <a th:case=0 href="/song/list?sortBy=name&asc=1">Name</a>
+                                    </th>
+                                    <th th:switch="${asc}">
+                                        <a th:case="null" href="/song/list?sortBy=mkey">Key</a>
+                                        <a th:case=1 href="/song/list?sortBy=mkey&asc=0">Key</a>
+                                        <a th:case=0 href="/song/list?sortBy=mkey&asc=1">Key</a>
+                                    </th>
+                                    <th th:switch="${asc}">
+                                        <a th:case="null" href="/song/list?sortBy=tempo">Tempo</a>
+                                        <a th:case=1 href="/song/list?sortBy=tempo&asc=0">Tempo</a>
+                                        <a th:case=0 href="/song/list?sortBy=tempo&asc=1">Tempo</a>
+                                    </th>
+                                    <th>Genres</th>
+                                    <th>Artists</th>
+                                </tr>
+                        </div>
+                        </thead>
+                        <tbody>
+                        <tr th:each="song : ${songlist}">
+                            <td><a th:href="@{/song/{id}(id=${song.id})}" th:value="${song.id}" name="id" th:text="${song.name}"></a></td>
+                            <td th:text="${song.mkey}"></td>
+                            <td th:text="${song.tempo}"></td>
+                            <td >
+                                <div th:each="genre : ${song.genres}"><a th:href="@{/genre/{gen}(gen=${genre.id})}" th:text="*{genre.name}" th:value="*{genre.id}"></a></div>
+                            </td>
+                            <td >
+                                <div th:each="artist : ${song.artists}"><a th:href="@{/artist/{art}(art=${artist.id})}" th:text="*{artist.name}" th:value="*{artist.id}"></a></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--</div></div>-->
+</body>
+
+</html>

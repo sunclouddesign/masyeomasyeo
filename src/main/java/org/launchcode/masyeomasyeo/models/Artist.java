@@ -12,7 +12,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "artists")
-/*public class Artist {*/
 public class Artist implements Serializable {
 
     @Id

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class DBWriter implements ItemWriter<Song> {
+public class SimpleSongWriter implements ItemWriter<Song> {
 
     @Autowired
     private SongDao songDao;
@@ -19,5 +19,15 @@ public class DBWriter implements ItemWriter<Song> {
 
         System.out.println("Data Saved for Songs: " + songs);
         songDao.saveAll(songs);
+
+
+
     }
+
+    /*        JdbcBatchItemWriter<Song> writer = new JdbcBatchItemWriter<Song>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Song>());
+        writer.setSql("INSERT INTO song(name) VALUES (:name)");
+        writer.setDataSource(dataSource);
+
+        return writer;*/
 }

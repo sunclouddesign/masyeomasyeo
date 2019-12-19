@@ -1,5 +1,6 @@
 package org.launchcode.masyeomasyeo.controllers;
 
+import org.launchcode.masyeomasyeo.exceptions.RecordNotFoundException;
 import org.launchcode.masyeomasyeo.models.Artist;
 import org.launchcode.masyeomasyeo.models.Genre;
 import org.launchcode.masyeomasyeo.models.Song;
@@ -20,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +46,7 @@ public class SongController {
         model.addAttribute("songs", songDao.findAll());
         model.addAttribute("genres", genreDao.findAll());
         model.addAttribute("artists", artistDao.findAll());
-        model.addAttribute("title","Public Database");
+        model.addAttribute("title","Song Database");
 
         return "song/list";
     }
@@ -54,18 +56,36 @@ public class SongController {
             Model model,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy )
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "1") Integer asc)
     {
         // custom method songService.getAllSongs replaces songDao.findAll to enable sorting & pagination
-        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy);
+        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy, asc);
         model.addAttribute("songs",list);
         model.addAttribute("genres", genreDao.findAll());
         model.addAttribute("artists", artistDao.findAll());
-        model.addAttribute("title","Public Database");
+        model.addAttribute("title","Song Database");
+        model.addAttribute("asc",asc);
         return "song/list";
 
     }
 
+    @RequestMapping(value = "song/{id}")
+    public String displaySingleSong(Model model, @PathVariable int id) throws RecordNotFoundException {
+        Song aSong = songDao.findById(id).orElse(null);
+        Integer songtempo = aSong.getTempo();
+        String songkey = aSong.getMkey();
+        Integer tempo1 = songtempo -30;
+        Integer tempo2 = songtempo + 30;
+        //var songlist = (List<Song>) songService.getRecommendations(8);
+        var songlist = (List<Song>) songService.findRecs(songkey,tempo1,tempo2);
+        model.addAttribute("song", aSong);
+        model.addAttribute("genres", genreDao.findAll());
+        model.addAttribute("artists", artistDao.findAll());
+        model.addAttribute("title", " Recommendations for Song " + aSong.getName());
+        model.addAttribute("songlist",songlist);
+        return "song/single";
+    }
 
     @RequestMapping(value = "song/add", method = RequestMethod.GET)
     public String displayAddSongForm(Model model) {
@@ -107,15 +127,69 @@ public class SongController {
     }
 
     @RequestMapping(value = "song/edit/{id}", method = RequestMethod.GET)
-    public String displayEditSongForm(Model model, @RequestParam int id) {
+    public String displayEditSongForm(Model model, @PathVariable int id) {
         model.addAttribute("title", "Edit Song");
         Song aSong = songDao.findById(id).orElse(null);
+        model.addAttribute("song", aSong);
         model.addAttribute("genres", genreDao.findAll());
         model.addAttribute("artists", artistDao.findAll());
         return "song/edit";
     }
 
-    // TODO: Add POST method to edit a song
+    @RequestMapping(value = "song/edit/{id}", method = RequestMethod.POST)
+    public String processEditSongForm(@RequestParam int id,
+                                      @RequestParam String name,
+                                      @RequestParam String mkey,
+                                      @RequestParam int tempo,
+                                      @RequestParam int[] genre_id,
+                                      @RequestParam int[] artist_id ) {
+
+        // TODO: add error messages to update form
+        /*if (errors.hasErrors()) {
+            return "redirect:";
+
+            model.addAttribute("title", "Edit Song");
+            Song aSong = songDao.findById(id).orElse(null);
+            model.addAttribute("song", aSong);
+            model.addAttribute("genres", genreDao.findAll());
+            model.addAttribute("artists", artistDao.findAll());
+            return "song/edit";
+        }*/
+
+        Song updateSong = songDao.findById(id).orElse(null);
+        updateSong.setName(name);
+        updateSong.setMkey(mkey);
+        updateSong.setTempo(tempo);
+
+        // To update and existing record, we first delete all genre and artist mappings
+        updateSong.getGenres().removeAll(genreDao.findAll());
+
+        updateSong.getArtists().removeAll((Collection<?>) artistDao.findAll());
+
+        // Then add the checked ones
+        for (int artistId : artist_id) {
+            Artist art = artistDao.findById(artistId).orElse(null);
+            updateSong.getArtists().add(art);
+        }
+        for (int genreId : genre_id) {
+            Genre aGen = genreDao.findById(genreId).orElse(null);
+            updateSong.getGenres().add(aGen);
+        }
+
+        songDao.save(updateSong);
+        //System.out.println(updateSong);
+        //System.out.println(songDao.findAll());
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "song/delete/{id}")
+    public String deleteSong(@PathVariable int id) {
+
+        Song aSong = songDao.findById(id).orElse(null);
+        songDao.delete(aSong);
+
+        return "redirect:/";
+    }
 
 
 }

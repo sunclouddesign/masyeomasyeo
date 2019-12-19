@@ -65,14 +65,16 @@ public class GenreController {
                             @PathVariable int gen,
                             @RequestParam(defaultValue = "0") Integer pageNo,
                             @RequestParam(defaultValue = "10") Integer pageSize,
-                            @RequestParam(defaultValue = "id") String sortBy) {
+                            @RequestParam(defaultValue = "id") String sortBy,
+                            @RequestParam(defaultValue = "1") Integer asc) {
 
         Genre aGenre = genreDao.findById(gen).orElse(null);
-        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy);
+        List<Song> list = songService.getAllSongs(pageNo, pageSize, sortBy, asc);
         model.addAttribute("songs",list);
         // TODO: Replace null with exception above
         model.addAttribute("title","Songs in Genre: " + aGenre.getName());
         model.addAttribute("genre",aGenre);
+        model.addAttribute("asc",asc);
 
         return "genre/single";
 

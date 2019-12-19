@@ -69,7 +69,8 @@ public class FileUploadController {
 			JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException,
 			JobInstanceAlreadyCompleteException {
 
-		String path = new ClassPathResource("tempuploads/").getURL().getPath();//it's assumed you have a folder called tempuploads in the resources folder
+		//it's assumed you have a folder called tempuploads in the resources folder
+		String path = new ClassPathResource("tempuploads/").getURL().getPath();
 		File fileLocation = new File(path + multipartFile.getOriginalFilename());
 		Map<String, JobParameter> maps = new HashMap<>();
 		maps.put("time", new JobParameter(System.currentTimeMillis()));

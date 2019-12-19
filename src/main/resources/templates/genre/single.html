@@ -14,9 +14,21 @@
     <table class="table">
 
         <tr>
-            <th><a th:href="@{/genre/{gen}?sortBy=name(gen=${genre.id})}">Song Name</a></th>
-            <th><a th:href="@{/genre/{gen}?sortBy=tempo(gen=${genre.id})}">Tempo</a></th>
-            <th><a th:href="@{/genre/{gen}?sortBy=mkey(gen=${genre.id})}">Key</a></th>
+            <th th:switch="${asc}">
+                <a th:case="null" th:href="@{/genre/{gen}?sortBy=name(gen=${genre.id})}">Song Name</a>
+                <a th:case=1 th:href="@{/genre/{gen}?sortBy=name&asc=1(gen=${genre.id})}">Song Name</a>
+                <a th:case=0 th:href="@{/genre/{gen}?sortBy=name&asc=0(gen=${genre.id})}">Song Name</a>
+            </th>
+            <th th:switch="${asc}">
+                <a th:case="null" th:href="@{/genre/{gen}?sortBy=tempo(gen=${genre.id})}">Tempo</a>
+                <a th:case=1 th:href="@{/genre/{gen}?sortBy=tempo&asc=1(gen=${genre.id})}">Tempo</a>
+                <a th:case=0 th:href="@{/genre/{gen}?sortBy=tempo&asc=0(gen=${genre.id})}">Tempo</a>
+            </th>
+            <th th:switch="${asc}">
+                <a th:case="null" th:href="@{/genre/{gen}?sortBy=mkey(gen=${genre.id})}">Key</a>
+                <a th:case=1 th:href="@{/genre/{gen}?sortBy=mkey&asc=1(gen=${genre.id})}">Key</a>
+                <a th:case=0 th:href="@{/genre/{gen}?sortBy=mkey&asc=0(gen=${genre.id})}">Key</a>
+            </th>
         </tr>
 
         <tr th:each="song : ${genre.songs}">
